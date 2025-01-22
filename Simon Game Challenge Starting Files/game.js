@@ -2,58 +2,68 @@ buttonColours = ["red","blue","green","yellow"];
 gamePattern = [];
 userClickedPattern = [];
 
+var level = 0;
+
 function nextSequence() {
+    level++;
+    $("h1").text("Level " + level);
+
     var randomNumber = Math.random();
     randomNumber = Math.floor(randomNumber * 4);
+
     return randomNumber;
 }
-
-var randomChosenColour = nextSequence();
-
-switch (randomChosenColour) {
-    case 0:
-        randomChosenColour = "red";
-        break;
-
-    case 1:
-        randomChosenColour = "blue";
-        break;
-    
-    case 2:
-        randomChosenColour = "green";
-        break;
-    
-    case 3:
-        randomChosenColour = "yellow";
-        break;
-
-    default:
-        break;
-}
-
-gamePattern.push(randomChosenColour);
 
 function playSound(colour) {
     var audio = new Audio('./sounds/' + colour + '.mp3');
     audio.play();
 }
 
-playSound(randomChosenColour);
-$("#" + randomChosenColour).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
-
-
 function animatePress(currentColour) {
     $("#" + currentColour).addClass("pressed");
 
+    setTimeout(function(){
+        $("#" + currentColour).removeClass("pressed");
+    }, 100);
 }
 
+function gameOver() {
+    $("body").addClass("game-over");
+
+
+    setTimeout(function() {
+        $("body").removeClass("game-over");
+    }, 100);
+
+    $("h1").text("Game Over, Press Any Key to Restart");
+}
 
 $(".btn").click(function() {
-    var userChosenColour = $(this).attr("id");
-    userClickedPattern.push(userChosenColour);
-    playSound(userChosenColour);
-    animatePress(userChosenColour);
 
+    if (level == 0) {
+        var audio = new Audio('./sounds/wrong.mp3');
+        audio.play();
+
+        gameOver();
+    }
+    else {
+        colourNumber = nextSequence();
+
+        var userChosenColour = $(this).attr("id");
+        userClickedPattern.push(userChosenColour);
+        playSound(userChosenColour);
+        animatePress(userChosenColour);
+    }
+    
+
+});
+
+$(document).keydown(function(event) {
+
+    if (event.key == "a" && level == 0)
+    {
+        nextSequence();
+    }
 });
 //
 
