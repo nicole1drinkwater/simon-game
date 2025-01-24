@@ -77,6 +77,22 @@ $(".btn").click(function() {
         gameOver();
     }
     else {
+
+        while (wrong == false) {
+            for (var i = 0; i < gamePattern.length;i ++) {
+                if (userClickedPattern[i] != gamePattern[i]) {
+                    console.log("hi");
+                    gameOver();
+                    wrong == true;
+                }
+                else {
+                    console.log("bye");
+                    pushColour();
+                    followSequence((gamePattern.length)+1);
+                }
+            }
+        }
+        
         var userChosenColour = $(this).attr("id");
         userClickedPattern.push(userChosenColour);
         playSound(userChosenColour);
@@ -115,20 +131,7 @@ function followSequence(arrayLength){
 
         console.log(gamePattern[0]);
 
-        while (wrong == false) {
-            for (var i = 0; i < gamePattern.length;i ++) {
-                if (userClickedPattern[i] != gamePattern[i]) {
-                    console.log("hi");
-                    gameOver();
-                    wrong == true;
-                }
-                else {
-                    console.log("bye");
-                    pushColour();
-                    followSequence((gamePattern.length)+1);
-                }
-            }
-        }
+        
     }
 
 
