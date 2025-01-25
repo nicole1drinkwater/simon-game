@@ -1,7 +1,8 @@
 buttonColours = ["red","blue","green","yellow"];
 gamePattern = [];
+userPatternThusFar = [];
 userClickedPattern = [];
-wrong = true;
+wrong = false;
 
 var level = 0;
 
@@ -29,12 +30,20 @@ function animatePress(currentColour) {
 }
 
 function gameOver() {
+    level = 0;
+    gamePattern = [];
+    userPatternThusFar = [];
+    userClickedPattern = [];
+    wrong = false;
+
+
     $("body").addClass("game-over");
 
 
     setTimeout(function() {
         $("body").removeClass("game-over");
     }, 100);
+
 
     $("h1").text("Game Over, Press Any Key to Restart");
 }
@@ -69,6 +78,8 @@ function pushColour() {
 
 
 $(".btn").click(function() {
+    console.log(gamePattern);
+    console.log(userClickedPattern);
 
     if (level == 0) {
         var audio = new Audio('./sounds/wrong.mp3');
@@ -78,28 +89,30 @@ $(".btn").click(function() {
     }
     else {
 
-        while (wrong == false) {
-            for (var i = 0; i < gamePattern.length;i ++) {
-                if (userClickedPattern[i] != gamePattern[i]) {
-                    console.log("hi");
-                    gameOver();
-                    wrong == true;
-                }
-                else {
-                    console.log("bye");
-                    pushColour();
-                    followSequence((gamePattern.length)+1);
-                }
-            }
-        }
-        
         var userChosenColour = $(this).attr("id");
         userClickedPattern.push(userChosenColour);
         playSound(userChosenColour);
         animatePress(userChosenColour);
-    }
-    
+        
+            for (var i = 0; i < gamePattern.length;i ++) {
+                if (userClickedPattern[i] != gamePattern[i]) {
+                    console.log("hi");
+                    gameOver();
+                    break;
+                }
+            }
 
+            console.log(gamePattern);
+        console.log(userClickedPattern);
+            
+            if (wrong == false) {
+                pushColour();
+                followSequence((gamePattern.length)+1);
+            }
+
+            console.log(gamePattern);
+    console.log(userClickedPattern);
+    }
 });
 
 $(document).keydown(function(event) {
@@ -107,9 +120,7 @@ $(document).keydown(function(event) {
     if (event.key == "a" && level == 0)
     {
         pushColour();
-        console.log(gamePattern[0]);
         followSequence(1);
-
     }
 });
 //
@@ -128,8 +139,6 @@ function followSequence(arrayLength){
 //ACTUAL CODE
     if (level == 0) {
         $("h1").text("Press A Key to Start");
-
-        console.log(gamePattern[0]);
 
         
     }
