@@ -26,16 +26,17 @@ function animatePress(currentColour) {
 
     setTimeout(function(){
         $("#" + currentColour).removeClass("pressed");
-    }, 100);
+    }, 200);
 }
 
 function gameOver() {
+    var audio = new Audio('./sounds/wrong.mp3');
+    audio.play();
+
     level = 0;
     gamePattern = [];
     userPatternThusFar = [];
     userClickedPattern = [];
-    wrong = false;
-
 
     $("body").addClass("game-over");
 
@@ -78,17 +79,11 @@ function pushColour() {
 
 
 $(".btn").click(function() {
-    console.log(gamePattern);
-    console.log(userClickedPattern);
-
+    debugger;
     if (level == 0) {
-        var audio = new Audio('./sounds/wrong.mp3');
-        audio.play();
-
         gameOver();
     }
     else {
-
         var userChosenColour = $(this).attr("id");
         userClickedPattern.push(userChosenColour);
         playSound(userChosenColour);
@@ -96,27 +91,21 @@ $(".btn").click(function() {
         
             for (var i = 0; i < gamePattern.length;i ++) {
                 if (userClickedPattern[i] != gamePattern[i]) {
-                    console.log("hi");
+                    wrong = true;
                     gameOver();
                     break;
                 }
             }
-
-            console.log(gamePattern);
-        console.log(userClickedPattern);
             
             if (wrong == false) {
                 pushColour();
                 followSequence((gamePattern.length)+1);
             }
-
-            console.log(gamePattern);
-    console.log(userClickedPattern);
+            
     }
 });
 
 $(document).keydown(function(event) {
-
     if (event.key == "a" && level == 0)
     {
         pushColour();
@@ -132,11 +121,10 @@ function followSequence(arrayLength){
                 var colour = gamePattern[index];
                 playSound(colour);
                 animatePress(colour);
-            }, 1000 * index); // Delay each step by 500ms
+            }, 500 * index); // Delay each step by 500ms
         })(i);
     }
 }
-//ACTUAL CODE
     if (level == 0) {
         $("h1").text("Press A Key to Start");
 
