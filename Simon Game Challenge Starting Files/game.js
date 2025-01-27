@@ -84,12 +84,43 @@ $(".btn").click(function() {
         gameOver();
     }
     else {
+
+        if (wrong == true) {
+            wrong = false;
+        }
+
         var userChosenColour = $(this).attr("id");
         userClickedPattern.push(userChosenColour);
         playSound(userChosenColour);
         animatePress(userChosenColour);
+
+        gamePatternLength = gamePattern.length;
+        userClickedPatternLength = userClickedPattern.length;
         
-            for (var i = 0; i < gamePattern.length;i ++) {
+            if (userClickedPatternLength != gamePatternLength) {
+                for (var i = 0; i < (gamePatternLength - userClickedPatternLength); i++) {
+
+                    userClickedPattern.push(userClickedPatternThusFar[i])
+                    userClickedPattern = userPatternThusFar;
+                    userClickedPatternThusFar = [];
+
+                    var userChosenColour = $(this).attr("id");
+                    userClickedPattern.push(userChosenColour);
+                    playSound(userChosenColour);
+                    animatePress(userChosenColour);
+
+                    if (userClickedPattern[i] != gamePattern[i]) {
+                        wrong = true;
+                        gameOver();
+                        break;
+                    }
+
+                    
+
+                }
+            }
+
+            for (var i = 0; i < gamePatternLength;i ++) {
                 if (userClickedPattern[i] != gamePattern[i]) {
                     wrong = true;
                     gameOver();
@@ -99,7 +130,9 @@ $(".btn").click(function() {
             
             if (wrong == false) {
                 pushColour();
-                followSequence((gamePattern.length)+1);
+                userPatternThusFar = userClickedPattern;
+                userClickedPattern = [];
+                followSequence((gamePatternLength)+1);
             }
             
     }
